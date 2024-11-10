@@ -65,7 +65,7 @@ def display():
                 ensembl_id = st.text_input(
                     "Enter Ensembl ID:",
                     key="target_dynamic_ensembl_id",
-                    help="Provide the Ensembl ID for the target (e.g., ENSG00000167552 for JAK2).",
+                    help="Provide the Ensembl ID for the target (e.g., ENSG00000169083).",
                 )
                 if st.button("Fetch Data", key="target_dynamic_fetch") and ensembl_id:
                     if use_case == "Retrieve compounds for a target":

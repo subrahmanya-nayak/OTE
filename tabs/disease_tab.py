@@ -86,7 +86,7 @@ def display():
                     efo_id = st.text_input(
                         "Enter EFO ID:",
                         key="disease_dynamic_efo_id",
-                        help="Provide the EFO ID for the disease (e.g., EFO_0000724 for Alopecia).",
+                        help="Provide the EFO ID for the disease (e.g., EFO_0000349).",
                     )
                     if st.button("Fetch Data", key="disease_dynamic_fetch") and efo_id:
                         query_display = DISEASE_QUERIES["clinical_compounds_by_id"]
