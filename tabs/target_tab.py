@@ -4,7 +4,6 @@ from queries.target_queries import TARGET_QUERIES
 
 def display():
     with st.container():
-        # Section Header
         st.markdown(
             """
             <div style="background-color: #e6f7ff; padding: 10px; border-radius: 5px;">
@@ -27,10 +26,15 @@ def display():
 
         try:
             if mode == "Fixed Use Cases":
-                use_case = st.selectbox("Select a Fixed Target Use Case", [
-                    "List preclinical, clinical, and approved drugs for JAK2",
-                    "Retrieve cancers with high expression for JAK2"
-                ], key="target_fixed_use_case")
+                use_case = st.selectbox(
+                    "Select a Fixed Target Use Case",
+                    [
+                        "List preclinical, clinical, and approved drugs for JAK2",
+                        "Retrieve cancers with high expression for JAK2",
+                    ],
+                    key="target_fixed_use_case",
+                    help="Choose a pre-configured use case to fetch data for a specific target.",
+                )
                 if st.button("Fetch Data", key="target_fixed_fetch"):
                     if use_case == "List preclinical, clinical, and approved drugs for JAK2":
                         query_display = TARGET_QUERIES["jak2_preclinical_drugs"]
@@ -49,11 +53,20 @@ def display():
                         display_results(data)
 
             elif mode == "Dynamic Use Cases":
-                use_case = st.selectbox("Select a Dynamic Target Use Case", [
-                    "Retrieve compounds for a target",
-                    "Retrieve cancers with high expression for a target"
-                ], key="target_dynamic_use_case")
-                ensembl_id = st.text_input("Enter Ensembl ID:", key="target_dynamic_ensembl_id")
+                use_case = st.selectbox(
+                    "Select a Dynamic Target Use Case",
+                    [
+                        "Retrieve compounds for a target",
+                        "Retrieve cancers with high expression for a target",
+                    ],
+                    key="target_dynamic_use_case",
+                    help="Select a dynamic use case and input target-specific parameters to fetch data.",
+                )
+                ensembl_id = st.text_input(
+                    "Enter Ensembl ID:",
+                    key="target_dynamic_ensembl_id",
+                    help="Provide the Ensembl ID for the target (e.g., ENSG00000167552 for JAK2).",
+                )
                 if st.button("Fetch Data", key="target_dynamic_fetch") and ensembl_id:
                     if use_case == "Retrieve compounds for a target":
                         query_display = TARGET_QUERIES["target_compounds"]

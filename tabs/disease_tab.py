@@ -26,10 +26,15 @@ def display():
 
         try:
             if mode == "Fixed Use Cases":
-                use_case = st.selectbox("Select a Fixed Disease Use Case", [
-                    "Retrieve tissue expression for Breast Cancer",
-                    "Retrieve clinical compounds for Alopecia"
-                ], key="disease_fixed_use_case")
+                use_case = st.selectbox(
+                    "Select a Fixed Disease Use Case",
+                    [
+                        "Retrieve tissue expression for Breast Cancer",
+                        "Retrieve clinical compounds for Alopecia",
+                    ],
+                    key="disease_fixed_use_case",
+                    help="Choose a pre-configured use case to fetch disease-related data.",
+                )
                 if st.button("Fetch Data", key="disease_fixed_fetch"):
                     if use_case == "Retrieve tissue expression for Breast Cancer":
                         query_display = DISEASE_QUERIES["breast_cancer_tissue_expression"]
@@ -54,12 +59,21 @@ def display():
                         display_results(data)
 
             elif mode == "Dynamic Use Cases":
-                use_case = st.selectbox("Select a Dynamic Disease Use Case", [
-                    "Retrieve approved compounds for a disease",
-                    "Search diseases by keyword"
-                ], key="disease_dynamic_use_case")
+                use_case = st.selectbox(
+                    "Select a Dynamic Disease Use Case",
+                    [
+                        "Retrieve approved compounds for a disease",
+                        "Search diseases by keyword",
+                    ],
+                    key="disease_dynamic_use_case",
+                    help="Select a dynamic use case and input disease-specific parameters to fetch data.",
+                )
                 if use_case == "Search diseases by keyword":
-                    query_string = st.text_input("Enter keyword to search diseases (e.g., Alopecia):", key="search_query")
+                    query_string = st.text_input(
+                        "Enter keyword to search diseases:",
+                        key="search_query",
+                        help="Provide a keyword to search for diseases (e.g., Alopecia).",
+                    )
                     if st.button("Search Diseases"):
                         query_display = DISEASE_QUERIES["search_diseases"]
                         result = query_opentargets(query_display, {"queryString": query_string})
@@ -69,7 +83,11 @@ def display():
                         display_results(data)
 
                 elif use_case == "Retrieve approved compounds for a disease":
-                    efo_id = st.text_input("Enter EFO ID:", key="disease_dynamic_efo_id")
+                    efo_id = st.text_input(
+                        "Enter EFO ID:",
+                        key="disease_dynamic_efo_id",
+                        help="Provide the EFO ID for the disease (e.g., EFO_0000724 for Alopecia).",
+                    )
                     if st.button("Fetch Data", key="disease_dynamic_fetch") and efo_id:
                         query_display = DISEASE_QUERIES["clinical_compounds_by_id"]
                         result = query_opentargets(query_display, {"efoId": efo_id})

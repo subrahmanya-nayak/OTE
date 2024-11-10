@@ -12,7 +12,6 @@ def get_chembl_id_from_name(drug_name):
 
 def display():
     with st.container():
-        # Section Header
         st.markdown(
             """
             <div style="background-color: #fff4e6; padding: 10px; border-radius: 5px;">
@@ -35,10 +34,15 @@ def display():
 
         try:
             if mode == "Fixed Use Cases":
-                use_case = st.selectbox("Select a Fixed Drug Use Case", [
-                    "Imatinib Phase 2 Diseases",
-                    "Rituximab Approved Diseases"
-                ], key="drug_fixed_use_case")
+                use_case = st.selectbox(
+                    "Select a Fixed Drug Use Case",
+                    [
+                        "Imatinib Phase 2 Diseases",
+                        "Rituximab Approved Diseases",
+                    ],
+                    key="drug_fixed_use_case",
+                    help="Choose a pre-configured use case to fetch specific drug-related data.",
+                )
                 if st.button("Fetch Data", key="drug_fixed_fetch"):
                     if use_case == "Imatinib Phase 2 Diseases":
                         query_display = DRUG_QUERIES["imatinib_phase_2"]
@@ -57,11 +61,20 @@ def display():
                         display_results(data)
 
             elif mode == "Dynamic Use Cases":
-                use_case = st.selectbox("Select a Dynamic Drug Use Case", [
-                    "Diseases in Phase 2 for a Drug",
-                    "Adverse Events for a Drug"
-                ], key="drug_dynamic_use_case")
-                drug_name = st.text_input("Enter Drug Name:", key="drug_dynamic_name")
+                use_case = st.selectbox(
+                    "Select a Dynamic Drug Use Case",
+                    [
+                        "Diseases in Phase 2 for a Drug",
+                        "Adverse Events for a Drug",
+                    ],
+                    key="drug_dynamic_use_case",
+                    help="Select a dynamic use case and input a drug name to fetch data.",
+                )
+                drug_name = st.text_input(
+                    "Enter Drug Name:",
+                    key="drug_dynamic_name",
+                    help="Provide the name of the drug (e.g., Imatinib or Rituximab).",
+                )
                 if st.button("Fetch Data", key="drug_dynamic_fetch") and drug_name:
                     chembl_id = get_chembl_id_from_name(drug_name)
                     if not chembl_id:

@@ -12,7 +12,10 @@ def query_opentargets(query, variables=None):
     if response.status_code == 200:
         return response.json()
     else:
+        # Log detailed error message
         st.error(f"Error {response.status_code}: {response.text}")
+        with st.expander("Error Details"):
+            st.code(f"HTTP Status: {response.status_code}\nResponse: {response.text}", language="plaintext")
         return None
 
 # Function to display results using st.dataframe
