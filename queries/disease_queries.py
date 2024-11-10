@@ -1,6 +1,4 @@
-# Queries for Disease Use Cases
 DISEASE_QUERIES = {
-    # Fixed Use Cases
     "breast_cancer_tissue_expression": """
     query {
         disease(efoId: "EFO_0000305") {
@@ -21,22 +19,7 @@ DISEASE_QUERIES = {
         }
     }
     """,
-    "alopecia_clinical_compounds": """
-    query {
-        disease(efoId: "EFO_0000745") {
-            knownDrugs {
-                rows {
-                    drug {
-                        name
-                    }
-                    phase
-                }
-            }
-        }
-    }
-    """,
-    # Dynamic Use Cases
-    "approved_compounds": """
+    "clinical_compounds_by_id": """
     query ($efoId: String!) {
         disease(efoId: $efoId) {
             knownDrugs {
@@ -50,22 +33,13 @@ DISEASE_QUERIES = {
         }
     }
     """,
-    "brain_protein_expression": """
-    query ($efoId: String!) {
-        disease(efoId: $efoId) {
-            associatedTargets {
-                rows {
-                    target {
-                        expressions {
-                            tissue {
-                                label
-                            }
-                            protein {
-                                level
-                            }
-                        }
-                    }
-                }
+    "search_diseases": """
+    query ($queryString: String!) {
+        search(queryString: $queryString) {
+            hits {
+                id
+                entity
+                description
             }
         }
     }

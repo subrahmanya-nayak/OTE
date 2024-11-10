@@ -24,5 +24,5 @@ def display_results(data):
     # Convert data to DataFrame
     df = pd.DataFrame(data)
     
-    # Display the DataFrame with st.dataframe (includes built-in export to CSV)
+    # Display the DataFrame with st.dataframe
     st.dataframe(df, use_container_width=True)

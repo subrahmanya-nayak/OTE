@@ -1,6 +1,4 @@
-# Queries for Target Use Cases
 TARGET_QUERIES = {
-    # Fixed Use Cases
     "jak2_preclinical_drugs": """
     query {
         target(ensemblId: "ENSG00000167552") {
@@ -10,27 +8,26 @@ TARGET_QUERIES = {
                         name
                     }
                     phase
-                    mechanismOfAction
+                    status
                 }
             }
         }
     }
     """,
-    "jak2_high_expression_cancers": """
-    query {
-        target(ensemblId: "ENSG00000167552") {
-            expressions {
-                tissue {
-                    label
-                }
-                rna {
-                    zscore
+    "cancer_high_expression": """
+    query ($ensemblId: String!) {
+        target(ensemblId: $ensemblId) {
+            associatedDiseases {
+                rows {
+                    disease {
+                        name
+                    }
+                    score
                 }
             }
         }
     }
     """,
-    # Dynamic Use Cases
     "target_compounds": """
     query ($ensemblId: String!) {
         target(ensemblId: $ensemblId) {
@@ -40,20 +37,6 @@ TARGET_QUERIES = {
                         name
                     }
                     mechanismOfAction
-                }
-            }
-        }
-    }
-    """,
-    "cancer_high_expression": """
-    query ($ensemblId: String!) {
-        target(ensemblId: $ensemblId) {
-            expressions {
-                tissue {
-                    label
-                }
-                rna {
-                    zscore
                 }
             }
         }
