@@ -63,5 +63,18 @@ DRUG_QUERIES = {
             }
         }
     }
+    """,
+    "drug_targets": """
+    query ($chemblId: String!) {
+        drug(chemblId: $chemblId) {
+            knownDrugs {
+                rows {
+                    target {
+                        approvedSymbol
+                    }
+                }
+            }
+        }
+    }
     """
 }

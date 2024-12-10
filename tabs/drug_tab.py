@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import query_opentargets, display_results
+from utils import query_opentargets, query_clinvar_for_pathogenic_snps, fetch_clinvar_details, display_results
 from queries.drug_queries import DRUG_QUERIES
 
 def get_chembl_id_from_name(drug_name):
@@ -66,6 +66,7 @@ def display():
                     [
                         "Diseases in Phase 2 for a Drug",
                         "Adverse Events for a Drug",
+                        "List targets with pathogenic SNPs for a compound",
                     ],
                     key="drug_dynamic_use_case",
                     help="Select a dynamic use case and input a drug name to fetch data.",
@@ -97,6 +98,41 @@ def display():
                         st.markdown("### Response Table: Adverse Events for the Drug")
                         display_results(data)
 
+                    elif use_case == "List targets with pathogenic SNPs for a compound":
+                        query_display = DRUG_QUERIES["drug_targets"]
+                        result = query_opentargets(query_display, {"chemblId": chembl_id})
+                        targets = result.get("data", {}).get("drug", {}).get("knownDrugs", {}).get("rows", [])
+
+                        # Deduplicate and fetch SNPs for each target
+                        target_snp_data = {}
+                        for target in targets:
+                            gene_name = target.get("target", {}).get("approvedSymbol")
+                            if not gene_name:
+                                continue
+                            pathogenic_snps = query_clinvar_for_pathogenic_snps(gene_name)
+                            if pathogenic_snps:
+                                target_snp_data[gene_name] = pathogenic_snps
+
+                        # Filter and fetch details for all SNPs
+                        display_data = []
+                        for gene, snps in target_snp_data.items():
+                            if not snps:  # Skip targets with no pathogenic SNPs
+                                continue
+                            snp_details = fetch_clinvar_details(snps)
+                            for snp in snp_details:
+                                display_data.append({
+                                    "Target": gene,
+                                    "Identifiers": snp["Identifiers"],
+                                    "Variation ID": snp["Variation ID"],
+                                    "Accession": snp["Accession"]
+                                })
+
+                        # Display results
+                        if display_data:
+                            st.markdown("### Targets with Pathogenic SNPs")
+                            display_results(display_data)
+                        else:
+                            st.error("No pathogenic SNPs found for the targets.")
         except Exception as e:
             st.error(f"An error occurred in the Drug tab: {e}")
 
